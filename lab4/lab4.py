@@ -10,6 +10,7 @@ from random import random
 from sklearn.preprocessing import MinMaxScaler
 from collections import defaultdict
 from collections import Counter
+import math
 
 #cell 2
 ## Iris dataset
@@ -22,8 +23,12 @@ df.data.shape
 def f_hash(w,r,b,x):
     return int((np.dot(w,x)+b)/r)
 
-# def distance(x, y):
-    # for i in range(x):
+def distance(x, y): # евклидово расстояние
+    retVal = 0
+    for i in range(x.shape[0]):
+        retVal += pow(x[i] - y[0][i], 2)
+    return math.sqrt(retVal)
+
 
 
 #cell 5
@@ -59,13 +64,20 @@ class KNNHash(object):
         for j in range(self.L):
             inds = []
             holder = []
+            labelHolder = []
             for i in range(self.m):
                 inds.append(self.t_hh[j][1][i](x=u)) # добавляем значение хэша с ветором u в хэш таблицу
             cntr = Counter([outp for inpt,outp in self.t_hh[j][0][sum(inds)]])
             # print(cntr) # выше можно будет вытащить все X[n] похожие на u, и считать длинну
-            for 
-            # for i in cntr:
-            #     print(i)
+
+            # решение снизу
+            for out in self.t_hh[j][0][sum(inds)]: # вытаскиваем все X[n], которые лежат в одном пуле с u
+                holder.append(distance(u, out)) # массив расстояний
+                labelHolder.append(out[1]) # массив лэйблов, которые мы вытаскиваем из X[n]
+            answer1 = holder.index(min(holder)) # находим индекс минимального
+            print(min(holder)) # минимальное из всех расстояний
+            print("Output: " + str(labelHolder[answer1])) # соответствующий индекс для лэйблв
+            
             #Here you must put your code, extend the method with distance function and calculation with unknown sample "u"
             #Develop the rest part of kNN predict method that was discussed at the lecture
 
@@ -89,13 +101,13 @@ x = np.delete(x,[0,75,149],axis=0) # убираем из икса тестовы
 y = np.delete(y,[0,75,149],axis=0) # убираем из игрика соответствующие тестовые лэйблы
 
 knnhash.fit(x,y)
-print(test1y)
+print("Expected output: " + str(test1y))
 knnhash.predict(test1x)
 print("-------------")
-print(test2y)
+print("Expected output: " + str(test2y))
 knnhash.predict(test2x)
 print("-------------")
-print(test3y)
+print("Expected output: " + str(test3y))
 knnhash.predict(test3x)
 
 #cell 9
