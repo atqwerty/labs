@@ -1,0 +1,2 @@
+- Sometimes array 'holder' is empty, i don't know why
+- Sometimes machine makes errors (miscalculations)
